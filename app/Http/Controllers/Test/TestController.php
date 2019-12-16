@@ -123,10 +123,11 @@ class TestController extends Controller
             // header("Refresh:0");
         	$driver->findElement((WebDriverBy::name('xhpc_message')))->sendKeys($api['data']['new']);
         	sleep(5);
-            
+            // $driver->findElement((WebDriverBy::cssSelector('div.notranslate _5rpu span')))->click();
             $driver->wait(10, 1000)->until(
               WebDriverExpectedCondition::visibilityOfElementLocated(WebDriverBy::cssSelector("div#pagelet_composer button.selected"))
             );
+            
         	$elements  = $driver->findElement(WebDriverBy::cssSelector("div#pagelet_composer button.selected"))->click();
         	sleep(5);
 
