@@ -85,7 +85,7 @@ class TestController extends Controller
 
     	$response = $client->request('get','http://api.tovicorp.com/getNew');
     	$api = json_decode($response->getBody()->getContents(),1);
-      
+        
         if($api['status'] == true){
         	$mailfb = 'Thanhbinhkmadev@gmail.com';
         	$passfb = 'Thanhbinh198x';
@@ -111,39 +111,93 @@ class TestController extends Controller
             
             
         	$driver->get('https://vi-vn.facebook.com/');
-        	sleep(2);
-        	$driver->findElement(WebDriverBy::id("email"))->sendKeys($mailfb);
-        	sleep(2);
-        	$driver->findElement(WebDriverBy::id('pass'))->sendKeys($passfb);
-        	sleep(2);
-        	$driver->findElement((WebDriverBy::cssSelector('#loginbutton > input[type="submit"]')))->click();
-        	sleep(2);
-            $cookie =$driver->manage()->getCookies();
-            // dd($cookie);
-            // header("Refresh:0");
+            sleep(5);
+        	// sleep(2);
+        	// $driver->findElement(WebDriverBy::id("email"))->sendKeys($mailfb);
+        	// sleep(2);
+        	// $driver->findElement(WebDriverBy::id('pass'))->sendKeys($passfb);
+        	// sleep(2);
+        	// $driver->findElement((WebDriverBy::cssSelector('#loginbutton > input[type="submit"]')))->click();
+        	// sleep(2);
+            
+
+            // $list = $driver->manage()->getCookies();
+            // foreach ($list as $cookie) {
+            //     //$domain = $cookie->getDomain();
+            //     print_r($cookie);
+            //     $tmp = $cookie['name'].':'.$cookie['value'];
+            //     file_put_contents(public_path('/cookie/fb.txt'), $tmp.PHP_EOL, FILE_APPEND | LOCK_EX);
+            // }
+          
+         
+         
+            $cookies = file_get_contents(public_path('cookie/fb.txt'));
+            $cookies = explode(PHP_EOL,$cookies);
+         
+            foreach ($cookies as $cookie) {
+
+                $tmp = explode(':',$cookie);
+                //dd($tmp);
+                if(isset($tmp[1])){
+                    $tmp_ck = array('name' => $tmp[0], 'value' => $tmp[1]);
+                    $driver->manage()->addCookie($tmp_ck);
+                }
+
+            }
+         
+            sleep(5);
+            // dd($cookie); 
+             $driver->get('https://vi-vn.facebook.com/');              
+             sleep(4);
         	$driver->findElement((WebDriverBy::name('xhpc_message')))->sendKeys($api['data']['new']);
         	sleep(5);
             // $driver->findElement((WebDriverBy::cssSelector('div.notranslate _5rpu span')))->click();
             $driver->wait(10, 1000)->until(
-              WebDriverExpectedCondition::visibilityOfElementLocated(WebDriverBy::cssSelector("div#pagelet_composer button.selected"))
+              WebDriverExpectedCondition::visibilityOfElementLocated(WebDriverBy::cssSelector("div#feedx_sprouts_container button.selected"))
             );
             
-        	$elements  = $driver->findElement(WebDriverBy::cssSelector("div#pagelet_composer button.selected"))->click();
-        	sleep(5);
+        	$elements  = $driver->findElement(WebDriverBy::cssSelector("div#feedx_sprouts_container button.selected"))->click();
+        	sleep(3);
 
         	// Twiter
         	$driver->get('https://twitter.com/?lang=en');
         	sleep(3);
-        	$driver->findElement((WebDriverBy::className('js-signin-email')))->sendKeys($mailtw);
+        	// $driver->findElement((WebDriverBy::className('js-signin-email')))->sendKeys($mailtw);
         	
-        	sleep(3);
-        	$driver->findElement((WebDriverBy::name('session[password]')))->sendKeys($passtw);
+        	// sleep(3);
+        	// $driver->findElement((WebDriverBy::name('session[password]')))->sendKeys($passtw);
 
-        	sleep(3);
+        	// sleep(3);
 
-        	$driver->findElement((WebDriverBy::className('EdgeButton--medium')))->click();
+        	// $driver->findElement((WebDriverBy::className('EdgeButton--medium')))->click();
         	
-        	sleep(2);
+        	// sleep(2);
+            // $lists = $driver->manage()->getCookies();
+            //  foreach ($lists as $cookies) {
+            //      //$domain = $cookie->getDomain();
+            //      print_r($cookies);
+            //      $tmps = $cookies['name'].':'.$cookies['value'];
+            //      file_put_contents(public_path('/cookie/twiter.txt'), $tmps.PHP_EOL, FILE_APPEND | LOCK_EX);
+            //  }
+
+            $cookiess = file_get_contents(public_path('cookie/twiter.txt'));
+            $cookiess = explode(PHP_EOL,$cookiess);
+         
+            foreach ($cookiess as $cookies) {
+
+                $tmpss = explode(':',$cookies);
+                
+                if(isset($tmpss[1])){
+                  $tmp_cks = array('name' => $tmpss[0], 'value' => $tmpss[1]);
+                    $driver->manage()->addCookie($tmp_cks);
+                }
+
+           }
+
+
+           sleep(3);
+           $driver->get('https://twitter.com/?lang=en');
+           sleep(4);
         	$driver->findElement((WebDriverBy::cssSelector('div[id="tweet-box-home-timeline"]')))->sendKeys(str_limit($api['data']['new'],70));
         	sleep(2);
         	$driver->findElement(WebDriverBy::xpath("//span[@class='add-tweet-button ']//following-sibling::button[contains(@class,'tweet-action')]"))->click();

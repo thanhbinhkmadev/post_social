@@ -20,3 +20,5 @@ Route::get('test_kma','Test\TestController@kma');
 Route::get('giai_thuat','Test\TestController@giaithuat');
 
 Route::get('test_api','Test\TestController@test_api');
+
+Route::get('admin-dashboard','Admin\DashboardController@index')->name('index.dashboard');
